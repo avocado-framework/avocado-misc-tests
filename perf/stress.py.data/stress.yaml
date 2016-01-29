@@ -1,3 +1,9 @@
+asset:
+    name: stress-1.0.4.tar.gz
+    md5sum: 890a4236dd1656792f3ef9a190cf99ef
+    cache_dir: /tmp
+    location:
+        - http://people.seas.harvard.edu/~apw/stress/
 setup:
     duration: !mux
         default:
