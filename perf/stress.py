@@ -6,6 +6,7 @@ import multiprocessing
 from avocado import Test
 from avocado import main
 from avocado.utils import archive
+from avocado.utils import asset
 from avocado.utils import disk
 from avocado.utils import build
 from avocado.utils import memory
@@ -23,15 +24,19 @@ class Stress(Test):
     def setUp(self):
         """
         Build 'stress'.
-        Source:
-         http://people.seas.harvard.edu/~apw/stress/stress-1.0.4.tar.gz
         """
-        stress_tarball = self.params.get('stress_tarball',
-                                         default='stress-1.0.4.tar.gz')
-        tarball_path = self.get_data_path(stress_tarball)
-        archive.extract(tarball_path, self.srcdir)
-        stress_version = stress_tarball.split('.tar.')[0]
-        self.srcdir = os.path.join(self.srcdir, stress_version)
+        lc = ['http://people.seas.harvard.edu/~apw/stress/stress-1.0.4.tar.gz']
+        stress = asset.Asset(name='stress-1.0.4.tar.gz',
+                             md5sum='890a4236dd1656792f3ef9a190cf99ef',
+                             cache_dir='/var/tmp',
+                             locations=lc)
+        tarball = stress.fetch()
+        if tarball is None:
+            self.error('tarball missing')
+
+        archive.extract(tarball, self.srcdir)
+        basename = os.path.basename(tarball.split('.tar.')[0])
+        self.srcdir = os.path.join(self.srcdir, basename)
         os.chdir(self.srcdir)
         process.run('./configure')
         build.make(self.srcdir)
