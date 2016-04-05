@@ -20,12 +20,12 @@ class Aiostress(Test):
         Source:
          https://oss.oracle.com/~mason/aio-stress/aio-stress.c
         """
-        aiostress_c = self.params.get('aiostress_c', default='aio-stress.c')
-        c_path = self.get_data_path(aiostress_c)
-        shutil.copy(c_path, self.srcdir)
+        aiostress = self.fetch_asset('https://oss.oracle.com/~mason/aio-stress/aio-stress.c')
+        shutil.copy(aiostress, self.srcdir)
         os.chdir(self.srcdir)
         # This requires libaio.h in order to build
-        process.run('gcc -Wall -laio -lpthread -o aio-stress %s' % aiostress_c)
+        process.run('gcc -Wall -laio -lpthread -o aio-stress %s' %
+                    os.path.basename(aiostress))
 
     def test(self):
         """
