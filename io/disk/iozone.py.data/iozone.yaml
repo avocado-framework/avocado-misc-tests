@@ -1,0 +1,7 @@
+setup:
+    location: !mux
+        default:
+            dir: null
+    argument: !mux
+        default:
+            args: null
