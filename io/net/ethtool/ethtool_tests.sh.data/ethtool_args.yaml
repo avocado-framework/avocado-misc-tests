@@ -1,0 +1,25 @@
+!mux
+Information:
+    arg:
+Driver:
+    arg: -i
+Autonegotiation:
+    arg: -r
+PauseParameter:
+    arg: -a
+Coalescing:
+    arg: -c
+RegisterDump:
+    arg: -d
+EEPROMDump:
+    arg: -e
+RingParameter:
+    arg: -g
+ShowOffloadProtocolFeature:
+    arg: -k
+AdapterInitiate:
+    arg: -p 3
+Statistics:
+    arg: -S
+SelfTest:
+    arg: -t
