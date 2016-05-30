@@ -13,20 +13,22 @@
 #
 # Copyright: 2016 IBM
 # Author: Nosheen Pathan <nopathan@linux.vnet.ibm.com>
-# Based on code by
 
+# Based on code by
 #   Author: Lucas Meneghel Rodrigues <lmr@redhat.com>
 #   Author: Yiqiao Pu <ypu@redhat.com>
 #   Author: Jiří Župka <jzupka@redhat.com>
 #   Author: Martin J. Bligh <mbligh@google.com>
 #   Author: John Admanski <jadmanski@google.com>
 #   Author: Mihai Rusu <dizzy@google.com>
+#   Author: Scott Zawalski <scottz@google.com>
 #   Copyright: 2009-2015  Red Hat, Inc
 #   Copyright: 2013  Red Hat, Inc
 #   Copyright: 2012  Red Hat, Inc
-#   Copyright: 2010  Google, Inc
+#   Copyright: 2007-2010  Google, Inc
 #   Copyright: 2010  Google, Inc
 #   Copyright: 2009 Google, Inc
+#   Copyright: 2008 Google, Inc
 
 import os
 import shutil
@@ -135,8 +137,6 @@ class Disktest(Test):
                 errors.append(retval)
         if errors:
             self.fail("Errors from children: %s" % errors)
-
-        # self.tearDown()
 
     def tearDown(self):
         """
