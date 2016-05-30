@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
@@ -9,10 +10,23 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 #
 # See LICENSE for more details.
+#
 # Copyright: 2016 IBM
 # Author: Nosheen Pathan <nopathan@linux.vnet.ibm.com>
 # Based on code by
-# Author: Martin Bligh (mbligh@google.com)
+
+#   Author: Lucas Meneghel Rodrigues <lmr@redhat.com>
+#   Author: Yiqiao Pu <ypu@redhat.com>
+#   Author: Jiří Župka <jzupka@redhat.com>
+#   Author: Martin J. Bligh <mbligh@google.com>
+#   Author: John Admanski <jadmanski@google.com>
+#   Author: Mihai Rusu <dizzy@google.com>
+#   Copyright: 2009-2015  Red Hat, Inc
+#   Copyright: 2013  Red Hat, Inc
+#   Copyright: 2012  Red Hat, Inc
+#   Copyright: 2010  Google, Inc
+#   Copyright: 2010  Google, Inc
+#   Copyright: 2009 Google, Inc
 
 import os
 import shutil
