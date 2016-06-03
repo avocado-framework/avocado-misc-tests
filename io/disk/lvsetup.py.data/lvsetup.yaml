@@ -1,0 +1,31 @@
+setup:
+    disk: !mux
+        default:
+            disk: null
+    vg_names: !mux
+        default:
+            vg_name: 'avocado_vg'
+    lv_names: !mux
+        default:
+            lv_name: 'avocado_lv'
+    size: !mux
+        default:
+            lv_size: '1G'
+    vg_size: !mux
+        default:
+            ramdisk_vg_size: '10000'
+    basedir: !mux
+        default:
+            ramdisk_basedir: '/tmp'
+    sparse_filename: !mux
+        default:
+            ramdisk_sparse_filename: 'virtual_hdd'
+    snapshot_name: !mux
+        default:
+            lv_snapshot_name: 'avocado_sn'
+    snapshot_size: !mux
+        default:
+            lv_snapshot_size: '1G'
+    flags:
+        default:
+            override_flag: 0
