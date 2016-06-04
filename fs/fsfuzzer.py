@@ -41,7 +41,7 @@ class Fsfuzzer(Test):
 
     def setUp(self):
         '''
-        Build lmbench
+        Build fsfuzzer
         Source:
         http://people.redhat.com/sgrubb/files/fsfuzzer-0.6.tar.gz
         '''
