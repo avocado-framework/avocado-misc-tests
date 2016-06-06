@@ -1,5 +1,4 @@
-
-# Valid options in avocado test are bellow:
 setup:
-	fstype : !mux
-		default : iso9660 
+	filesystem : !mux
+		default : 
+			fstype : iso9660
