@@ -1,0 +1,7 @@
+setup:
+    tarball_base: !mux
+        default:
+            tarball_base: linux-2.6.18.tar.bz2
+    parallel: !mux
+        default:
+            parallel: True
