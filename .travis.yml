@@ -20,3 +20,4 @@ script:
     - inspekt lint
     - inspekt indent
     - inspekt style
+    - ./check_licensing.py
