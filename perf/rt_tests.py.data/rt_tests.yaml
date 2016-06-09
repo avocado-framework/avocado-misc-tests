@@ -1,0 +1,8 @@
+setup:
+    general: !mux
+         default:
+             test_to_run: signaltest
+             args: '-t 10 -l 100000 '
+         cyclictest: !mux
+             test_to_run: cyclictest
+             args: '-t 10 -l 100000 '
