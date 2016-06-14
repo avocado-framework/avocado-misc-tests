@@ -11,19 +11,23 @@
 # See LICENSE for more details.
 # Copyright: 2016 IBM
 # Author: Nosheen Pathan <nopathan@linux.vnet.ibm.com>
-# Based on code by
-# Author: Martin Bligh (mbligh@google.com)
-# Copyright: 2007 Google, Inc.
+# Copyright: 2016 Red Hat, Inc.
+# Author: Lukas Doktor <ldoktor@redhat.com>
+#
+# Based on code by Martin Bligh (mbligh@google.com)
+#   Copyright: 2007 Google, Inc.
+#   https://github.com/autotest/autotest-client-tests/tree/master/disktest
 
+import glob
 import os
 import shutil
 
 from avocado import Test
 from avocado import main
-from avocado.utils import memory
-from avocado.utils import disk
-from avocado.utils import process
 from avocado.utils import build
+from avocado.utils import disk as utils_disk
+from avocado.utils import memory
+from avocado.utils import process
 from avocado.utils.software_manager import SoftwareManager
 
 
@@ -36,13 +40,13 @@ class Disktest(Test):
     disk and disk controller.
     It writes 50MB/s of 500KB size ops.
     """
-    version = 2
 
     def setUp(self):
         """
         Verifies if we have gcc to compile disktest.
-        :param disk1: Directory (usually mountpoints) to be passed to the test.
-                      Directory gets created if not existing
+        :param disks: List of directories of used in test. In case only string
+                      is used it's split using ','. When the target is not
+                      directory, it's created.
         :param gigabytes: Disk space that will be used for the test to run.
         :param chunk_mb: Size of the portion of the disk used to run the test.
                         Cannot be larger than the total amount of free RAM.
@@ -52,10 +56,59 @@ class Disktest(Test):
         softm = SoftwareManager()
         if not softm.check_installed("gcc") and not softm.install("gcc"):
             self.error('Gcc is needed for the test to be run')
+        # Log of all the disktest processes
+        self.disk_log = os.path.abspath(os.path.join(self.outputdir,
+                                                     "log.txt"))
 
-        self.disk1 = self.params.get('disk1', default=self.workdir)
-        self.gigabytes = self.params.get('gigabytes', default=None)
+        self._init_params()
+        self._compile_disktest()
+
+    def _init_params(self):
+        """
+        Retrieves and checks the test params
+        """
+        disks = self.params.get('disks', default=None)
+        if disks is None:   # Avocado does not accept lists in params.get()
+            disks = [self.workdir]
+        elif isinstance(disks, basestring):  # Allow specifying disks as str
+            disks = disks.split(',')    # it's string pylint: disable=E1101
+        for disk in disks:  # Disks have to be mounted dirs
+            if not os.path.isdir(disk):
+                os.makedirs(disk)
+        self.disks = disks
+
+        memory_mb = memory.memtotal() / 1024
         self.chunk_mb = self.params.get('chunk_mb', default=None)
+        if self.chunk_mb is None:   # By default total RAM
+            self.chunk_mb = memory_mb
+        if self.chunk_mb == 0:
+            self.chunk_mb = 1
+        if memory_mb > self.chunk_mb:
+            self.error("Chunk size has to be greater or equal to RAM size. "
+                       "(%s > %s)" % (self.chunk_mb, memory_mb))
+
+        gigabytes = self.params.get('gigabytes', default=None)
+        if gigabytes is None:
+            free = 100  # cap it at 100GB by default
+            for disk in self.disks:
+                free = min(utils_disk.freespace(disk) / 1073741824, free)
+            gigabytes = free
+
+        self.no_chunks = 1024 * gigabytes / self.chunk_mb
+        if self.no_chunks == 0:
+            self.error("Free disk space is lower than chunk size (%s, %s)"
+                       % (1024 * gigabytes, self.chunk_mb))
+
+        self.log.info("Test will use %s chunks %sMB each in %sMB RAM using %s "
+                      "GB of disk space on %s disks (%s).", self.no_chunks,
+                      self.chunk_mb, memory_mb,
+                      self.no_chunks * self.chunk_mb, len(self.disks),
+                      self.disks)
+
+    def _compile_disktest(self):
+        """
+        Compiles the disktest
+        """
         source = self.params.get('source', default='disktest.c')
         makefile = self.params.get('make', default='Makefile')
         c_file = os.path.join(self.datadir, source)
@@ -66,27 +119,22 @@ class Disktest(Test):
         dest_m_file = os.path.join(self.srcdir, make_file_name)
         shutil.copy(c_file, dest_c_file)
         shutil.copy(make_file, dest_m_file)
-        self.memory_mb = memory.memtotal() / 1024
         os.chdir(self.srcdir)
         build.make(self.srcdir)
 
-    def one_disk_chunk(self, disk1, chunk):
+    def one_disk_chunk(self, disk, chunk):
         """
         Tests one part of the disk by spawning a disktest instance.
         :param disk1: Directory (usually a mountpoint).
         :param chunk: Portion of the disk used.
         """
-        self.log.info("Testing %d MB files on %s in %d MB memory, chunk %s",
-                      self.chunk_mb, disk1, self.memory_mb, chunk)
-        logfile = os.path.join(self.outputdir, "log.txt")
         cmd = ("%s/disktest -m %d -f %s/testfile.%d -i -S >>%s 2>&1" %
-               (self.srcdir, self.chunk_mb, disk1, chunk, logfile))
-        self.log.debug("Running '%s'", cmd)
+               (self.srcdir, self.chunk_mb, disk, chunk, self.disk_log))
 
-        proc = process.get_sub_process_klass(cmd)(cmd, shell=True)
-        proc.start()
-        proc.poll()
-        return proc
+        proc = process.get_sub_process_klass(cmd)(cmd, shell=True,
+                                                  verbose=False)
+        pid = proc.start()
+        return pid, proc
 
     def test(self):
         """
@@ -94,41 +142,26 @@ class Disktest(Test):
 
         """
         os.chdir(self.srcdir)
-        if self.chunk_mb is None:
-            self.chunk_mb = memory.memtotal() / 1024
-        if self.gigabytes is None:
-            free = 100  # cap it at 100GB by default
-            if not os.path.isdir(self.disk1):
-                os.makedirs(self.disk1)
-
-            free = min(disk.freespace(self.disk1) / 1024 ** 3, free)
-            self.gigabytes = free
-            self.log.info("Resizing to %s GB", self.gigabytes)
-
-        if self.memory_mb > self.chunk_mb:
-            self.error("Too much RAM (%dMB) for this test to work" %
-                       self.memory_mb)
-        if self.chunk_mb == 0:
-            self.chunk_mb = 1
-        chunks = (1024 * self.gigabytes) / self.chunk_mb
-        self.log.info(
-            "Total number of disk chunks that will be used: %s", chunks)
+        procs = []
         errors = []
-        for i in xrange(chunks):
-            proc = self.one_disk_chunk(self.disk1, i)
-            retval = proc.wait()
-            if retval != 0:
-                errors.append("chunk %s is failed" % i)
-
-        if errors:
-            self.log.info("Total chunks failed are %s ", len(errors))
-            self.fail("Errors from children: %s" % errors)
+        for i in xrange(self.no_chunks):
+            self.log.debug("Testing chunk %s...", i)
+            for disk in self.disks:
+                procs.append(self.one_disk_chunk(disk, i))
+            for pid, proc in procs:
+                if proc.wait():
+                    errors.append(str(pid))
+            if errors:
+                self.fail("The %s pid(s) failed, please check the logs and %s"
+                          " for details." % (", ".join(errors), self.disk_log))
 
     def tearDown(self):
         """
         To clean all the testfiles generated
         """
-        process.run('rm -rf %s/testfile.*' % self.disk1, shell=True)
+        for disk in getattr(self, "disks", []):
+            for filename in glob.glob("%s/testfile.*" % disk):
+                os.remove(filename)
 
 
 if __name__ == "__main__":
