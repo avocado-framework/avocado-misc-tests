@@ -14,15 +14,8 @@
 # Copyright: 2016 IBM.
 # Author: Rajashree Rajendran<rajashr7@linux.vnet.ibm.com>
 
-# Based on code by
-#   Author: Lucas Meneghel Rodrigues <lmr@redhat.com>
-#   Author: Xu Tian <xutian@redhat.com>
-#   Author: Jeff Moyer <jmoyer@redhat.com>
-#   Author: Dmitry Monakhov <dmonakhov@openvz.org>
-#   Copyright: 2008 - 2015 Red Hat, Inc.
-#   Copyright: 2013 Red Hat, Inc.
-#   Copyright: 2010 Red Hat, Inc.
-#   Copyright: 2012 <dmonakhov@openvz.org>
+# Based on code by Yao Fei Zhu <walkinair@cn.ibm.com>
+#   Copyright: 2006 IBM
 #   https://github.com/autotest/autotest-client-tests/tree/master/tiobench
 
 """
@@ -42,7 +35,7 @@ from avocado.utils.software_manager import SoftwareManager
 
 class Tiobench(Test):
     """
-    Avocado module for tiobench.
+    Avocado test for tiobench.
     """
     def setUp(self):
         """
@@ -70,7 +63,7 @@ class Tiobench(Test):
         :params num_runs: This number specifies over how many runs
                           each test should be averaged.
         """
-        target = self.params.get('target', default='/var/tmp')
+        target = self.params.get('target', default=self.workdir)
         blocks = self.params.get('blocks', default=4096)
         threads = self.params.get('threads', default=10)
         size = self.params.get('size', default=1024)
