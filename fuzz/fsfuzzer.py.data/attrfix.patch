@@ -1,0 +1,20 @@
+diff -crB a/fstest.c b/fstest.c
+*** a/fstest.c	2016-06-16 14:10:28.079055825 -0400
+--- b/fstest.c	2016-06-16 14:10:00.342911586 -0400
+***************
+*** 41,47 ****
+  #define CHECK_XATTR 1
+  
+  #ifdef CHECK_XATTR
+! #include <attr/xattr.h>
+  #define MAXLISTBUF 65536
+  #endif
+  
+--- 41,47 ----
+  #define CHECK_XATTR 1
+  
+  #ifdef CHECK_XATTR
+! #include <sys/xattr.h>
+  #define MAXLISTBUF 65536
+  #endif
+  
