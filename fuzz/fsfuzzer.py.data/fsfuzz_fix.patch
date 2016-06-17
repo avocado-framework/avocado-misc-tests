@@ -1,0 +1,31 @@
+diff -crB a/fsfuzz b/fsfuzz
+*** a/fsfuzz	2016-06-17 00:34:05.095520027 -0400
+--- b/fsfuzz	2016-06-17 00:40:16.884310750 -0400
+***************
+*** 1,4 ****
+! #!/bin/sh
+  # (c) 2006-2009 Steve Grubb <sgrubb@redhat.com>
+  # (c) 2006, LMH <lmh@info-pull.com>
+  #
+--- 1,4 ----
+! #!/bin/bash
+  # (c) 2006-2009 Steve Grubb <sgrubb@redhat.com>
+  # (c) 2006, LMH <lmh@info-pull.com>
+  #
+***************
+*** 16,22 ****
+  DIR="/media/test"
+  PASSES="1000"
+  START_SWEEP=`expr \( $PASSES \* 6 \) \/ 10`
+! 
+  # Basic filesystems that should be included by default
+  filesystems="cramfs ext2 ext3 ext4 swap"
+  
+--- 16,22 ----
+  DIR="/media/test"
+  PASSES="1000"
+  START_SWEEP=`expr \( $PASSES \* 6 \) \/ 10`
+! mkdir $DIR
+  # Basic filesystems that should be included by default
+  filesystems="cramfs ext2 ext3 ext4 swap"
+  

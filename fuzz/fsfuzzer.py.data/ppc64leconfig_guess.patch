@@ -1,0 +1,16 @@
+diff -crB a/config.guess b/config.guess
+*** a/config.guess	2016-06-16 13:58:52.999375493 -0400
+--- b/config.guess	2016-06-16 14:07:18.426067778 -0400
+***************
+*** 921,926 ****
+--- 921,930 ----
+      ppc64:Linux:*:*)
+  	echo powerpc64-unknown-linux-gnu
+  	exit ;;
++     ppc64le:Linux:*:*)
++         echo powerpc64-unknown-linux-gnu
++         exit ;;
++ 
+      alpha:Linux:*:*)
+  	case `sed -n '/^cpu model/s/^.*: \(.*\)/\1/p' < /proc/cpuinfo` in
+  	  EV5)   UNAME_MACHINE=alphaev5 ;;
