@@ -17,10 +17,6 @@
 # Based on code by:
 # Author: Yao Fei Zhu <walkinair@cn.ibm.com>
 # copyright : 2006 IBM
-# Author: Ashwin Ganti <aganti@google.com>
-# copyright : 2008 Google, Inc.
-# Author: John Admanski <jadmanski@google.com>
-# copyright : 2008 Google, Inc.
 # https://github.com/autotest/autotest-client-tests/tree/master/libhugetlbfs
 
 import os
