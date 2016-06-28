@@ -30,7 +30,6 @@ if SoftwareManager().check_installed("ethtool") is False:
         print "Not able to install ethtool"
         exit(1)
 END
-exit
 
 [[ -z $interface ]] && interface="eth1"
 echo "Interface: $interface"
