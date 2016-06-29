@@ -1,0 +1,4 @@
+setup:
+ filesystem : !mux
+  default : 
+   fstype : cramfs|ext2|ext3|ext4|swap|iso9660|msdos|vfat|xfs
