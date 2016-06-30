@@ -32,7 +32,6 @@ from avocado import Test
 from avocado import main
 from avocado.utils import process
 from avocado.utils import partition as partition_lib
-from avocado.core import exceptions
 
 
 class ParallelDd(Test):
