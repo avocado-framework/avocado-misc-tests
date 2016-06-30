@@ -57,7 +57,7 @@ class ParallelDd(Test):
 
         self.disk = self.params.get('disk')
         if not self.disk:
-            exceptions.TestError('Test requires disk parameter')
+            self.error('Test requires disk parameter')
         self.fsys = partition_lib.Partition(self.disk, mountpoint=self.srcdir)
         self.megabytes = self.params.get('megabytes', default=100)
         self.blocks = self.params.get('blocks', default=None)
