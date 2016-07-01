@@ -1,0 +1,7 @@
+setup:
+   tem_dir: !mux
+    default:
+     fsdir: None
+   temp_file: !mux
+    default:
+     tem_file: None
