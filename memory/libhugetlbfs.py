@@ -19,6 +19,7 @@
 
 import os
 import glob
+
 from avocado import Test
 from avocado import main
 from avocado.utils import process
@@ -31,6 +32,7 @@ from avocado.utils import distro
 
 
 class libhugetlbfs(Test):
+
     def setUp(self):
         # Check for root permission
         if os.geteuid() != 0:
@@ -100,9 +102,33 @@ class libhugetlbfs(Test):
         process.run('patch -p1 < %s' % data_dir + '/' + patch, shell=True)
         build.make(self.srcdir, extra_args='BUILDTYPE=NATIVEONLY')
 
+    def fail_check(self, check):
+
+        log = self.logdir + '/stdout'
+        cmd_fail = "grep 'FAIL:' %s  |head -1| awk '{ print $%s}'" % (
+            log, check)
+        if check == 3:
+            env = "32"
+        else:
+            env = "64"
+
+        fail_check = os.popen(cmd_fail).read()
+
+        if fail_check > 0:
+
+            self.fail(fail_check + " hugpage page " + env + " bit test failed")
+
     def test(self):
         os.chdir(self.srcdir)
-        build.make(self.srcdir, extra_args='BUILDTYPE=NATIVEONLY check')
+
+        # use process.system :to log 'make command' output in stdout
+        process.system('make BUILDTYPE=NATIVEONLY check')
+
+        # 64 bit hugepage test check
+        self.fail_check(4)
+
+        # 32 bit hugepage test check
+        self.fail_check(3)
 
     def tearDown(self):
         if self.hugetlbfs_dir:
