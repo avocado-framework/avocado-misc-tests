@@ -1,3 +1,10 @@
+**This repository is frozen**
+
+Please refer to the new, community maintained, Avocado tests repository:
+
+https://github.com/avocado-framework-tests/avocado-misc-tests
+
+
 Avocado Misc Tests
 ==================
 
