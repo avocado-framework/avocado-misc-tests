@@ -1,0 +1,10 @@
+1. Added license heading.
+2. Added documentation string.
+3. Fixed variable naming convention errors.
+4. Modified package installation code using for loop.
+5. Modified code to use absolute paths.
+6. Used parenthesis to wrap the line.
+7. Modified code to run command only once using process library.
+8. Removed print statement.
+9. Modified message logged during failure.
+10. Wrote new common_functions.sh script.

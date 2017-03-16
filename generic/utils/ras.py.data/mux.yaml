@@ -1,0 +1,40 @@
+RASTools: !mux
+    command1:
+        script: sys_ident_tool.sh
+        tool: sys_ident
+    command2:
+        script: lsvio_tool.sh 
+        tool: lsvio
+    command3:
+        script: lsmcode_tool.sh 
+        tool: lsmcode
+    command4:
+        script: ppc64_cpu_tool.sh
+        tool: ppc64_cpu
+    command5: 
+        script: ofpathname_tool.sh 
+        tool: ofpathname
+    command6:
+        script: nvram_tool.sh
+        tool: nvram
+    command7:
+        script: lsslot_tool.sh
+        tool: lsslot
+    command8:
+        script: drmgr_tool.sh 
+        tool: drmgr
+    command9:
+        script: set_poweron_time_tool.sh 
+        tool: set_poweron_time
+    command10:
+        script: lsprop_tool.sh 
+        tool: lsprop
+    command11:
+        script: rtas_ibm_get_vpd_tool.sh
+        tool: rtas_ibm_get_vpd
+    command12:
+        script: tool_snap.sh 
+        tool: snap
+    command13:
+        script: rtas_tool.sh 
+        tool: rtas
