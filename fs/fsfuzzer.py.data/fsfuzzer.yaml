@@ -1,0 +1,4 @@
+setup:
+	filesystem : !mux
+		default : 
+			fstype : iso9660
